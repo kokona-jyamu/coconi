@@ -283,7 +283,7 @@ export default function App() {
           <div style={c.navSub}>代表 村上心菜</div>
         </div>
         <ul style={c.navLinks}>
-          {["できること", "実績", "について", "お問い合わせ"].map(l => (
+          {["できること", "実績", "COCONIについて", "お問い合わせ"].map(l => (
             <li key={l}><a href="#" style={c.navLink}>{l}</a></li>
           ))}
         </ul>
@@ -307,7 +307,7 @@ export default function App() {
           </div>
         </div>
         <div className="animate-7" style={c.statBox}>
-          {[["4", "ヶ月で積み上げた実績"], ["4", "つの専門領域"], ["B2B + BtoC", "幅広いクライアント対応"]].map(([num, lbl]) => (
+          {[["4", "ヶ月で積み上げた実績"], ["4", "つの専門領域"], ["BtoB + BtoC", "幅広いクライアント対応"]].map(([num, lbl]) => (
             <div key={lbl} style={c.stat}>
               <div style={c.statNum}>{num}</div>
               <div style={c.statLbl}>{lbl}</div>
