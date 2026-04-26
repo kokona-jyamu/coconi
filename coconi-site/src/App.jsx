@@ -453,8 +453,8 @@ export default function App() {
           <div style={c.secLine} />
         </div>
         <div style={c.conInner}>
-          <h2 style={c.conH2}>まずは気軽にご相談ください</h2>
-          <p style={c.conP}>企業・個人問わずご相談をお受けしています。<br />内容によってプランをご提案します。</p>
+          <h2 style={c.conH2}>まずはお気軽にご相談ください</h2>
+          <p style={c.conP}>企業・個人問わずご相談をお受けしています。<br />内容に応じてプランをご提案します。</p>
           <div style={c.conCards}>
             <div style={c.cCard}>
               <div style={c.cLabel}>For Business</div>
@@ -464,7 +464,7 @@ export default function App() {
             <div style={c.cCard}>
               <div style={c.cLabel}>For Individual</div>
               <div style={c.cTitle}>個人・小規模店舗の方へ</div>
-              <div style={c.cDesc}>食育相談・HP制作・SNS運用など、小さなご依頼からでも丁寧に対応いたします。</div>
+              <div style={c.cDesc}>食育相談・HP制作・SNS運用など、小さなご依頼からでも丁寧にご対応いたします。</div>
             </div>
           </div>
           <button style={c.btnP} onClick={() => setShowForm(true)}>お問い合わせ →</button>
