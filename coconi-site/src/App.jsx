@@ -313,7 +313,7 @@ export default function App() {
           <div style={c.navSub}>代表 村上心菜</div>
         </div>
         <ul style={c.navLinks}>
-          {["できること", "実績", "について", "お問い合わせ"].map(l => (
+          {["できること", "実績", "COCONIについて", "お問い合わせ"].map(l => (
             <li key={l}><a href="#" style={c.navLink}>{l}</a></li>
           ))}
         </ul>
