@@ -43,6 +43,12 @@ const styles = `
   .animate-5 { animation: fadeUp 0.7s 0.30s ease forwards; opacity: 0; }
   .animate-6 { animation: fadeUp 0.7s 0.36s ease forwards; opacity: 0; }
   .animate-7 { animation: fadeUp 0.7s 0.20s ease forwards; opacity: 0; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.35s ease forwards; }
 `;
 
 // ─── DATA ────────────────────────────────────────────────
@@ -50,24 +56,28 @@ const styles = `
 const services = [
   {
     icon: "Nutrition",
+    filterKey: "Nutrition",
     title: "食育・メニュー開発・発信",
     desc: "栄養学に基づくメニュー監修から食育活動・献立作成・SNS発信まで対応します。",
     tags: ["メニュー開発", "食育", "献立作成", "SNS発信"],
   },
   {
     icon: "Engineering",
+    filterKey: "Engineering",
     title: "Web制作・システム開発",
     desc: "要件定義・設計からリリースまで一貫対応。HP制作・API連携・イベントサイト制作。",
     tags: ["HP制作", "要件定義", "API連携", "イベントサイト"],
   },
   {
     icon: "Marketing",
+    filterKey: "Marketing",
     title: "集客・マーケティング支援",
     desc: "MEO・SEO対策からSNS運用代行まで。現場目線で実践的な施策を実行します。",
     tags: ["MEO対策", "SEO対策", "SNS運用代行", "集客施策"],
   },
   {
     icon: "HR & Operations",
+    filterKey: "HR",
     title: "組織・人事サポート",
     desc: "採用・人事・メンタルヘルスケアを含む組織づくりを現場からサポートします。",
     tags: ["人事・採用", "メンタルヘルス", "業務改善"],
@@ -90,6 +100,13 @@ const pillars = [
   { num: "02", title: "現場に寄り添う姿勢", desc: "小規模チームでも丁寧に。長期的なパートナーとして伴走します。" },
   { num: "03", title: "AI時代の人間力", desc: "感情・文脈・関係性を読む力で、代替されない価値を届けます。" },
 ];
+
+const filterLabelMap = {
+  Nutrition:   "Nutrition — 管理栄養士",
+  Engineering: "Engineering — エンジニア",
+  Marketing:   "Marketing — マーケティング",
+  HR:          "HR & Operations — 人事・組織",
+};
 
 // ─── CONTACT FORM ────────────────────────────────────────
 
@@ -203,6 +220,19 @@ function ContactForm() {
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
+  const [activeFilter, setActiveFilter] = useState(null);
+  const worksRef = { current: null };
+
+  const handleFilterClick = (cat) => {
+    if (activeFilter === cat) {
+      setActiveFilter(null);
+    } else {
+      setActiveFilter(cat);
+      setTimeout(() => {
+        document.getElementById("works-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    }
+  };
 
   const c = {
     nav:       { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.25rem 2.5rem", borderBottom: "0.5px solid var(--border)", background: "var(--bg)", position: "sticky", top: 0, zIndex: 100 },
@@ -283,7 +313,7 @@ export default function App() {
           <div style={c.navSub}>代表 村上心菜</div>
         </div>
         <ul style={c.navLinks}>
-          {["できること", "実績", "COCONIについて", "お問い合わせ"].map(l => (
+          {["できること", "実績", "について", "お問い合わせ"].map(l => (
             <li key={l}><a href="#" style={c.navLink}>{l}</a></li>
           ))}
         </ul>
@@ -307,7 +337,7 @@ export default function App() {
           </div>
         </div>
         <div className="animate-7" style={c.statBox}>
-          {[["4", "ヶ月で積み上げた実績"], ["4", "つの専門領域"], ["BtoB + BtoC", "幅広いクライアント対応"]].map(([num, lbl]) => (
+          {[["4", "ヶ月で積み上げた実績"], ["4", "つの専門領域"], ["B2B + BtoC", "幅広いクライアント対応"]].map(([num, lbl]) => (
             <div key={lbl} style={c.stat}>
               <div style={c.statNum}>{num}</div>
               <div style={c.statLbl}>{lbl}</div>
@@ -325,34 +355,71 @@ export default function App() {
           <div style={c.secLine} />
         </div>
         <div style={c.skillGrid}>
-          {services.map(s => (
-            <div key={s.title} style={c.skillCard}>
-              <div style={c.skillIcon}>{s.icon}</div>
-              <div style={c.skillTitle}>{s.title}</div>
-              <div style={c.skillDesc}>{s.desc}</div>
-              <div style={c.tagWrap}>{s.tags.map(t => <span key={t} style={c.tag}>{t}</span>)}</div>
-            </div>
-          ))}
+          {services.map(s => {
+            const isActive = activeFilter === s.filterKey;
+            return (
+              <div
+                key={s.title}
+                style={{
+                  ...c.skillCard,
+                  background: isActive ? "var(--matcha)" : "var(--bg)",
+                  cursor: "pointer",
+                  position: "relative",
+                }}
+                onClick={() => handleFilterClick(s.filterKey)}
+              >
+                <div style={{ ...c.skillIcon, color: isActive ? "rgba(255,255,255,0.75)" : "var(--ink-sub)" }}>{s.icon}</div>
+                <div style={{ ...c.skillTitle, color: isActive ? "#fff" : "var(--ink)" }}>{s.title}</div>
+                <div style={{ ...c.skillDesc, color: isActive ? "rgba(255,255,255,0.85)" : "var(--ink-sub)" }}>{s.desc}</div>
+                <div style={c.tagWrap}>
+                  {s.tags.map(t => (
+                    <span key={t} style={{ ...c.tag, borderColor: isActive ? "rgba(255,255,255,0.35)" : "var(--border)", color: isActive ? "rgba(255,255,255,0.85)" : "var(--ink-sub)" }}>{t}</span>
+                  ))}
+                </div>
+                <div style={{ position: "absolute", bottom: "1.1rem", right: "1.25rem", fontSize: 10, color: isActive ? "rgba(255,255,255,0.7)" : "var(--ink-sub)", letterSpacing: "0.08em", opacity: isActive ? 1 : 0.5 }}>
+                  {isActive ? "表示中 ↓" : "実績を見る ↓"}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       <div style={c.divider} />
 
       {/* WORKS */}
-      <section style={c.sec}>
-        <div style={c.secHead}>
-          <span style={c.secLabel}>実績 — 副業開始から4ヶ月</span>
-          <div style={c.secLine} />
+      <section style={c.sec} id="works-section">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.75rem" }}>
+          <div style={{ ...c.secHead, marginBottom: 0, flex: 1 }}>
+            <span style={c.secLabel}>実績 — 副業開始から4ヶ月</span>
+            <div style={c.secLine} />
+          </div>
+          {activeFilter && (
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: 16 }}>
+              <span style={{ fontSize: 10, padding: "3px 12px", background: "var(--matcha)", color: "#fff", letterSpacing: "0.08em" }}>
+                {filterLabelMap[activeFilter]}
+              </span>
+              <button
+                style={{ fontSize: 10, color: "var(--ink-sub)", background: "none", border: "0.5px solid var(--border)", padding: "3px 12px", cursor: "pointer", letterSpacing: "0.08em", fontFamily: "'DM Sans', sans-serif" }}
+                onClick={() => setActiveFilter(null)}
+              >
+                すべて表示
+              </button>
+            </div>
+          )}
         </div>
         <div style={c.workList}>
-          {works.map(w => (
-            <div key={w.title} style={c.workRow}>
-              <div style={c.wCat}>{w.cat}</div>
-              <div style={c.wTitle}>{w.title}</div>
-              <div style={c.wDesc}>{w.desc}</div>
-              <div style={c.wBadge}>{w.badge}</div>
-            </div>
-          ))}
+          {works
+            .filter(w => !activeFilter || w.cat === activeFilter)
+            .map(w => (
+              <div key={w.title} className="fade-in" style={c.workRow}>
+                <div style={c.wCat}>{w.cat}</div>
+                <div style={c.wTitle}>{w.title}</div>
+                <div style={c.wDesc}>{w.desc}</div>
+                <div style={c.wBadge}>{w.badge}</div>
+              </div>
+            ))
+          }
         </div>
       </section>
 
